@@ -1,0 +1,32 @@
+{
+  "name": "tyler-king/launch",
+  "description": "Laravel common routes for apps and openapi",
+  "type": "library",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "tyler-king",
+      "email": "tylerking3719@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "TKing\\": "src/"
+    }
+  },
+  "require": {
+    "illuminate/support": "^7.16",
+    "laravel/framework": "^7.16"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "TKing\\LaunchProvider"
+      ]
+    }
+  }
+}
