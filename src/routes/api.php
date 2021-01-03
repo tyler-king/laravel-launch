@@ -17,4 +17,9 @@ if (file_exists(config("launch.openapi"))) {
             }
         }
     }
+	if ($openapi['x-homepage']){
+		Route::get("/", function () {
+			return redirect($openapi['x-homepage']);
+		});
+	}
 }
