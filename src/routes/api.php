@@ -11,15 +11,15 @@ if (file_exists(config("launch.openapi"))) {
             if (isset($configuration['controller'])) {
                 $request = Route::{$type}($route, "App\\Http\\Controllers\\" . $configuration['controller']);
                 if (isset($configuration['auth'])) {
-					//NOW alert if using /{} because it will intercept a lot of requests
+                    //NOW alert if using /{} because it will intercept a lot of requests
                     $request->middleware($configuration['auth']);
                 }
             }
         }
     }
-	if ($openapi['x-homepage']){
-		Route::get("/", function () {
-			return redirect($openapi['x-homepage']);
-		});
-	}
+    if ($openapi['x-homepage']) {
+        Route::get("/", function () use ($openapi) {
+            return redirect($openapi['x-homepage']);
+        });
+    }
 }
