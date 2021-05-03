@@ -12,7 +12,7 @@ class LaunchProvider extends ServiceProvider
         $this->loadRoutesFrom($this->basePath('routes/api.php'));
         $this->loadRoutesFrom($this->basePath('routes/console.php'));
 
-        $this->loadViewsFrom($this->basePath('resources/views', 'launch'));
+        $this->loadViewsFrom($this->basePath('resources/views'), 'launch');
 
         $this->publishes([
             $this->basePath('resources/views') => resource_path('views/vendor/launch'),
