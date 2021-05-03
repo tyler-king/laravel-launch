@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
+use TKing\App\Helpers\VSCode;
 use TKing\Launch\Helpers\OpenApi;
 use TKing\Launch\Helpers\CreateDatabase;
 use TKing\Launch\Helpers\Vapor;
@@ -45,6 +47,29 @@ Artisan::command('launch:init:vapor {--id=} {--name=} {--domain=}', function () 
     $vapor->copyVaporYml();
 })->purpose('Adds template vapor yml and github actions for deploying CI');
 
+Artisan::command('launch:setup:vscode', function () {
+    $vscode = new VSCode();
+    $vscode->publishExtensions();
+    $vscode->publishXdebug();
+})->purpose('Set up VSCode for project');
+
+Artisan::command('launch:install:sail', function () {
+    Artisan::call('sail:install');
+    Artisan::call('sail:publish');
+})->purpose('Set up Sail');
+
+Artisan::command('launch:install:env {--projectNo=}', function () {
+    $projectNumber = $this->option('projectNo');
+    if (!isset($projectNumber)) {
+        // .env.example copy if not exists. Add forwarding port information with increments
+    }
+})->purpose('Set up Env');
+
+Artisan::command('launch:install', function () {
+    Artisan::call('launch:install:sail');
+    Artisan::call('launch:install:env');
+    Artisan::call('launch:install:vapor');
+});
 
 /**
  *         "post-update-cmd": [
