@@ -1,6 +1,6 @@
 <?php
 
-namespace TKing;
+namespace TKing\Launch\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -10,6 +10,7 @@ class LaunchProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+        $this->loadRoutesFrom(__DIR__ . '/routes/console.php');
 
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'launch');
 

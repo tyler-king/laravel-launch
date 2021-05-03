@@ -2,11 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use TKing\Launch\Helpers\OpenApi;
 
-if (file_exists(config("launch.openapi"))) {
-    $openapi = json_decode(file_get_contents(config("launch.openapi")), true);
-
-    foreach ($openapi['paths'] as $route => $method) {
+try {
+    $openapi = OpenApi::fromConfig(config("launch.openapi"));
+    foreach ($openapi->getPaths() as $route => $method) {
         foreach ($method as $type => $configuration) {
             if (isset($configuration['controller'])) {
                 $request = Route::{$type}($route, "App\\Http\\Controllers\\" . $configuration['controller']);
@@ -17,9 +17,12 @@ if (file_exists(config("launch.openapi"))) {
             }
         }
     }
-    if ($openapi['x-homepage']) {
+    if (!empty($openapi->getHomePage())) {
         Route::get("/", function () use ($openapi) {
-            return redirect($openapi['x-homepage']);
+            return redirect($openapi->getHomePage());
         });
     }
+} catch (Exception $e) {
+    die($e->getMessage());
+    throw new \RuntimeException("Invalid OpenAPI configuration");
 }

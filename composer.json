@@ -11,7 +11,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "TKing\\": "src/"
+      "TKing\\Launch\\": "app/"
     }
   },
   "require": {
@@ -25,7 +25,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "TKing\\LaunchProvider"
+        "TKing\\Launch\\Providers\\LaunchProvider"
       ]
     }
   }
