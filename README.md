@@ -21,6 +21,7 @@
 - php artisan launch:install:env
 - php artisan launch:publish:vscode
 - php artisan launch:install:xdebug
+- php artisan launch:install:openapi
 - php artisan launch:install:packages
 - php artisan launch:publish:graphql
 - php artisan launch:install:cognito

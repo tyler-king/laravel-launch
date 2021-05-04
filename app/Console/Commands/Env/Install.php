@@ -22,7 +22,7 @@ class Install extends Command
         $name = $this->ask('What is the name of your project?', $name);
         $projectNumber = $this->ask('What project number is this? (This will be used to increment Forward Ports so you can run multiple)', $projectNumber);
         $database = $this->ask('What is your initial database name?', $database);
-        $env->edit($name, $database, $projectNumber);
+        $env->edit($name, $database, (int)$projectNumber);
         $env->fixup();
         return 0;
     }

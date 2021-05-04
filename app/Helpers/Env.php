@@ -57,7 +57,7 @@ class Env
             return $line;
         });
 
-        File::put(base_path('.env'), $currentEnv->implode(self::EOL));
+        File::put(base_path('.env'), $currentEnv->implode(self::EOL) . self::EOL);
     }
 
     public function getName(): ?string

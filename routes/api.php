@@ -11,7 +11,7 @@ try {
             if (isset($configuration['controller'])) {
                 $request = Route::{$type}($route, "App\\Http\\Controllers\\" . $configuration['controller']);
                 if (isset($configuration['auth'])) {
-                    //NOW alert if using /{} because it will intercept a lot of requests
+                    //TODO alert if using /{} because it will intercept a lot of requests
                     $request->middleware($configuration['auth']);
                 }
             }

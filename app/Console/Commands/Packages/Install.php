@@ -17,9 +17,10 @@ class Install extends Command
     public function handle()
     {
 
-        //TODO remove already installed from list
+        $composer = json_decode(File::get(base_path('composer.json')), true);
+
         $list = [
-            'tyler-king/serverless-cognito' => ['name' => 'tyler-king/serverless-cognito', 'repositories' => [
+            'serverless-cognito' => ['name' => 'tyler-king/serverless-cognito', 'repositories' => [
                 [
                     "type" => "git",
                     "url" => "https://github.com/tyler-king/php-jwt.git"
@@ -29,9 +30,26 @@ class Install extends Command
                     "url" => "https://github.com/tyler-king/laravel-serverless-cognito.git"
                 ]
             ]],
-            'rebing/graphql-laravel' => ['name' => 'rebing/graphql-laravel'],
-            'vapor (core, cli, ui)' => ['name' => 'laravel/vapor-cli laravel/vapor-core laravel/vapor-ui']
+            'graphql-laravel' => ['name' => 'rebing/graphql-laravel'],
+            'vapor' => ['name' => 'laravel/vapor-cli laravel/vapor-core laravel/vapor-ui']
         ];
+        $list = array_map(function ($value) use ($composer) {
+            $names = explode(' ', $value['name']);
+            $names = array_filter($names, function ($name) use ($composer) {
+                return !isset($composer['require'][$name]);
+            });
+            $value['name'] = trim(implode(' ', $names));
+            return $value;
+        }, $list);
+        $list = array_filter($list, function ($value) {
+            return !empty($value['name']);
+        });
+
+        if (count($list) == 0) {
+            $this->info('Everything is already installed');
+            return;
+        }
+
         $name = $this->choice(
             "Do you want to install any of the packages",
             array_keys($list),

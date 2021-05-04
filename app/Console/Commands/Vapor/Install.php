@@ -22,6 +22,7 @@ class Install extends Command
         $this->addPublishToComposer();
 
         /*
+        //TODO automate
         `sail shell`
         - `./vendor/bin/vapor login`
         - `./vendor/bin/vapor init -n` //or check for current just this sail artisan project:setup:vapor --name= --domain=

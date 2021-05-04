@@ -37,7 +37,7 @@ class Install extends Command
                 "COGNITO_APP_TOKEN=",
                 "COGNITO_LOGIN_URL=",
             ]);
-            File::put(base_path($env), $currentEnv->implode(self::EOL));
+            File::put(base_path($env), $currentEnv->implode(self::EOL) . self::EOL);
         }
         $this->info('Follow directions in ' . base_path('vendor/tyler-king/serverless-cognito/README.md'));
         //TODO add api.cognito middleware instead of web to vapor-ui.php
