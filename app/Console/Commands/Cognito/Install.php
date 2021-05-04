@@ -21,7 +21,7 @@ class Install extends Command
         foreach (['.env', '.env.example'] as $env) {
             $currentEnv = File::get(base_path($env));
             $currentEnv = Str::of($currentEnv)->explode(self::EOL);
-
+            //TODO don't override if already exists or at least provide option to use values
             $currentEnv = $currentEnv->reject(function ($line) {
                 return Str::of($line)->startsWith([
                     "#COGNITO_REGION=local",
@@ -41,6 +41,7 @@ class Install extends Command
         }
         $this->info('Follow directions in ' . base_path('vendor/tyler-king/serverless-cognito/README.md'));
         //TODO add api.cognito middleware instead of web to vapor-ui.php
+
         return 0;
     }
 }
