@@ -10,7 +10,7 @@ class Vapor
 
     public function __construct(private string $id, private string $name, private string $domain)
     {
-        if (base_path('vapor.yml')) {
+        if (File::exists(base_path('vapor.yml'))) {
             $yml = File::get(base_path('vapor.yml'));
             if (empty($this->id)) {
                 $this->id = $this->find($yml, 'id');

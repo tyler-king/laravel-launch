@@ -11,7 +11,7 @@ use RuntimeException;
 class CreateDatabase
 {
 
-    public static function create(bool $force): string
+    public function create(bool $force): string
     {
         $connection = config('database.default');
         $driver = config("database.connections.{$connection}.driver");
@@ -19,7 +19,7 @@ class CreateDatabase
             throw new RuntimeException("Only works with mysql for now. This is $driver");
         }
         $database = DB::getDatabaseName();
-        $DBExists = DB::statement('SELECT `SCHEMA_NAME` FROM INFORAMTION_SCHEMA.SCHEMATA WHERE `SCHEMA_NAME` = :name', ['name' => $database]);
+        $DBExists = DB::select('SELECT `SCHEMA_NAME` FROM INFORAMTION_SCHEMA.SCHEMATA WHERE `SCHEMA_NAME` = :name', ['name' => $database]);
         $DBExists = count($DBExists) > 0;
         if (!$DBExists) {
             if ($force) {

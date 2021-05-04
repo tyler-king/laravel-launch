@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TKing\App\Helpers;
+namespace TKing\Launch\Helpers;
 
 use Illuminate\Support\Facades\File;
 
@@ -25,21 +25,28 @@ class VSCode
 
     public function publishExtensions()
     {
+        $path = base_path('.vscode' . DIRECTORY_SEPARATOR . 'extensions.json');
         $extensions = [];
-        if (File::exists(base_path('.vscode/extensions.json'))) {
-            $extensions = json_decode(File::get(base_path('.vscode/extensions.json')), true) ?? [];
+
+        if (!File::exists(".vscode")) {
+            File::makeDirectory(".vscode");
+        }
+
+        if (File::exists($path)) {
+            $extensions = json_decode(File::get($path), true) ?? [];
         }
         $extensions['recommendations'] = array_merge(
             $decode['recommendations'] ?? [],
             self::RECOMMENDATIONS
         );
         $extensions['recommendations'] = array_values(array_unique($extensions['recommendations']));
-        File::put(base_path('.vscode/extensions.json'), json_encode($extensions, JSON_PRETTY_PRINT));
+        File::put($path, json_encode($extensions, JSON_PRETTY_PRINT));
     }
 
     public function publishXdebug()
     {
-        File::copy($this->thisDirectory('launch.json'), base_path('.vscode/launch.json'));
+        $path = base_path('.vscode' . DIRECTORY_SEPARATOR . 'launch.json');
+        File::copy($this->thisDirectory('launch.json'), $path);
     }
 
     private function thisDirectory(string $path = ''): string
