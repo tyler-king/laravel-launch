@@ -29,9 +29,9 @@ class Env
             })->concat([
                 "#FORWARD PORT INFORMATION FOR MULTIPLE PROJECTS",
                 "APP_PORT=" . (8000 + $projectNumber),
-                "FORWARD_DB_PORT=3306" . $projectNumber,
-                "FORWARD_REDIS_PORT=6379" . $projectNumber,
-                "FORWARD_MAILHOG_PORT=1025" . $projectNumber,
+                "FORWARD_DB_PORT=" . (3306 + $projectNumber),
+                "FORWARD_REDIS_PORT=" . (6379 + $projectNumber),
+                "FORWARD_MAILHOG_PORT=" . (1025 + $projectNumber),
                 "FORWARD_MAILHOG_DASHBOARD_PORT=" . (8026 + $projectNumber)
             ]);
         }
@@ -104,6 +104,12 @@ class Env
 
     public function fixup(): void
     {
+        $this->gitAttributes();
+        $this->dockerComposerMySQL();
+    }
+
+    private function gitAttributes(): void
+    {
         $currentGitAttr = File::get(base_path('.gitattributes'));
         $currentGitAttr = Str::of($currentGitAttr)->explode(self::EOL);
 
@@ -115,5 +121,26 @@ class Env
         });
 
         File::put(base_path('.gitattributes'), $currentGitAttr->implode(self::EOL));
+    }
+
+    private function dockerComposerMySQL(): void
+    {
+        $currentDockerFile = File::get(base_path('docker-compose.yml'));
+        $currentDockerFile = Str::of($currentDockerFile)->explode(self::EOL);
+
+        $command = 'command: --default-authentication-plugin=mysql_native_password';
+        $needsInstalled = $currentDockerFile->filter(function ($line) use ($command) {
+            return Str::of($line)->contains($command);
+        })->isEmpty();
+        if ($needsInstalled) {
+            $currentDockerFile = $currentDockerFile->map(function ($line) use ($command) {
+                if (Str::of($line)->trim()->startsWith("environment:")) {
+                    $prefix = strpos($line, 'e');
+                    return str_repeat(' ', $prefix) . $command . self::EOL . $line;
+                }
+                return $line;
+            });
+            File::put(base_path('docker-compose.yml'), $currentDockerFile->implode(self::EOL));
+        }
     }
 }
