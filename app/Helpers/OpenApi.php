@@ -20,10 +20,8 @@ class OpenApi
     public static function fromConfig($openapi): self
     {
         if (is_string($openapi)) {
-            if (file_exists(base_path($openapi))) {
-                $openapi = file_get_contents(
-                    base_path($openapi)
-                );
+            if (file_exists($openapi)) {
+                $openapi = file_get_contents($openapi);
             }
             $openapi = json_decode($openapi, true);
         }
