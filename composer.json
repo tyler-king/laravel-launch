@@ -15,8 +15,8 @@
     }
   },
   "require": {
-    "illuminate/support": "^8.29",
-    "laravel/framework": "^8.29"
+    "illuminate/support": "^10.0",
+    "laravel/framework": "^10.0"
   },
   "config": {
     "optimize-autoloader": true,
