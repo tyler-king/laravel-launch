@@ -22,7 +22,7 @@ try {
             return redirect($openapi->getHomePage());
         });
     }
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die($e->getMessage());
     throw new \RuntimeException("Invalid OpenAPI configuration");
 }
