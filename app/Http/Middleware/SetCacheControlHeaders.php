@@ -11,10 +11,18 @@ class SetCacheControlHeaders
     /**
      * Cached compiled regex patterns
      * Static to persist across requests in the same PHP process
+     * Limited to prevent unbounded growth in long-running processes
      *
      * @var array
      */
     private static array $compiledPatterns = [];
+    
+    /**
+     * Maximum number of patterns to cache
+     * 
+     * @var int
+     */
+    private const MAX_CACHE_SIZE = 100;
 
     /**
      * Handle an incoming request.
@@ -40,6 +48,11 @@ class SetCacheControlHeaders
         foreach ($cacheControlRules as $pattern => $cacheControl) {
             // Get or compile regex pattern
             if (!isset(self::$compiledPatterns[$pattern])) {
+                // Prevent unbounded cache growth
+                if (count(self::$compiledPatterns) >= self::MAX_CACHE_SIZE) {
+                    // Remove oldest entry (first item)
+                    array_shift(self::$compiledPatterns);
+                }
                 self::$compiledPatterns[$pattern] = $this->convertPatternToRegex($pattern);
             }
             
