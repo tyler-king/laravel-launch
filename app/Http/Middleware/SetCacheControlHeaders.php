@@ -10,10 +10,11 @@ class SetCacheControlHeaders
 {
     /**
      * Cached compiled regex patterns
+     * Static to persist across requests in the same PHP process
      *
      * @var array
      */
-    private array $compiledPatterns = [];
+    private static array $compiledPatterns = [];
 
     /**
      * Handle an incoming request.
@@ -31,20 +32,22 @@ class SetCacheControlHeaders
             return $response;
         }
 
-        // Get current request path (without leading slash)
+        // Get current request path with leading slash
+        // Request::path() returns path without leading slash (e.g., 'api/users')
         $currentPath = '/' . $request->path();
 
         // Find matching rule
         foreach ($cacheControlRules as $pattern => $cacheControl) {
             // Get or compile regex pattern
-            if (!isset($this->compiledPatterns[$pattern])) {
-                $this->compiledPatterns[$pattern] = $this->convertPatternToRegex($pattern);
+            if (!isset(self::$compiledPatterns[$pattern])) {
+                self::$compiledPatterns[$pattern] = $this->convertPatternToRegex($pattern);
             }
             
-            $regex = $this->compiledPatterns[$pattern];
+            $regex = self::$compiledPatterns[$pattern];
 
             if (preg_match($regex, $currentPath)) {
-                $response->header('Cache-Control', $cacheControl);
+                // Use headers->set() to properly replace any existing Cache-Control header
+                $response->headers->set('Cache-Control', $cacheControl);
                 break;
             }
         }
