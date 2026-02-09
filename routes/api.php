@@ -13,12 +13,12 @@ try {
                 
                 // Auto-wrap GET requests with cache.control middleware
                 if (strtolower($type) === 'get') {
-                    $request->middleware('cache.control');
+                    $request = $request->middleware('cache.control');
                 }
                 
                 if (isset($configuration['auth'])) {
                     //TODO alert if using /{} because it will intercept a lot of requests
-                    $request->middleware($configuration['auth']);
+                    $request = $request->middleware($configuration['auth']);
                 }
             }
         }
