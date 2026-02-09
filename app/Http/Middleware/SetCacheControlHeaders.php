@@ -9,6 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 class SetCacheControlHeaders
 {
     /**
+     * Cached compiled regex patterns
+     *
+     * @var array
+     */
+    private array $compiledPatterns = [];
+
+    /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
@@ -24,15 +31,19 @@ class SetCacheControlHeaders
             return $response;
         }
 
-        // Get current request path
-        $currentPath = $request->path();
+        // Get current request path (without leading slash)
+        $currentPath = '/' . $request->path();
 
         // Find matching rule
         foreach ($cacheControlRules as $pattern => $cacheControl) {
-            // Convert pattern to regex
-            $regex = $this->convertPatternToRegex($pattern);
+            // Get or compile regex pattern
+            if (!isset($this->compiledPatterns[$pattern])) {
+                $this->compiledPatterns[$pattern] = $this->convertPatternToRegex($pattern);
+            }
+            
+            $regex = $this->compiledPatterns[$pattern];
 
-            if (preg_match($regex, '/' . $currentPath)) {
+            if (preg_match($regex, $currentPath)) {
                 $response->header('Cache-Control', $cacheControl);
                 break;
             }
