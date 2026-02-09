@@ -4,6 +4,7 @@ namespace TKing\Launch\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use TKing\Launch\Console\Commands;
+use TKing\Launch\Http\Middleware\SetCacheControlHeaders;
 
 class LaunchProvider extends ServiceProvider
 {
@@ -11,6 +12,10 @@ class LaunchProvider extends ServiceProvider
     {
         $this->loadRoutesFrom($this->basePath('routes/web.php'));
         $this->loadRoutesFrom($this->basePath('routes/api.php'));
+
+        // Register middleware alias
+        $router = $this->app['router'];
+        $router->aliasMiddleware('cache.control', SetCacheControlHeaders::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([
