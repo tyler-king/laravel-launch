@@ -12,14 +12,17 @@ class SetCacheControlHeaders
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string|null  $cacheControl  Cache-Control header value from OpenAPI spec
+     * @param  string  ...$cacheControlParts  Cache-Control header value parts from OpenAPI spec
      */
-    public function handle(Request $request, Closure $next, ?string $cacheControl = null): Response
+    public function handle(Request $request, Closure $next, string ...$cacheControlParts): Response
     {
         $response = $next($request);
 
-        // Use the cache control value passed as parameter (from OpenAPI spec)
-        if (!empty($cacheControl)) {
+        // Concatenate all parts with ", " to reconstruct the full cache control value
+        // Laravel splits middleware parameters by comma, so we need to join them back
+        if (!empty($cacheControlParts)) {
+            // Trim each part to remove any extra spaces from the split
+            $cacheControl = implode(', ', array_map('trim', $cacheControlParts));
             // Use headers->set() to properly replace any existing Cache-Control header
             $response->headers->set('Cache-Control', $cacheControl);
         }
