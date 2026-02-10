@@ -11,9 +11,9 @@ try {
             if (isset($configuration['controller'])) {
                 $request = Route::{$type}($route, "App\\Http\\Controllers\\" . $configuration['controller']);
                 
-                // Auto-wrap GET requests with cache.control middleware
-                if (strtolower($type) === 'get') {
-                    $request = $request->middleware('cache.control');
+                // Apply cache.control middleware if x-cache-control is defined for this endpoint
+                if (isset($configuration['x-cache-control'])) {
+                    $request = $request->middleware('cache.control:' . $configuration['x-cache-control']);
                 }
                 
                 if (isset($configuration['auth'])) {
