@@ -5,6 +5,7 @@ namespace TKing\Launch\Providers;
 use Illuminate\Support\ServiceProvider;
 use TKing\Launch\Console\Commands;
 use TKing\Launch\Http\Middleware\SetCacheControlHeaders;
+use TKing\Launch\Http\Middleware\ThrottleRequests;
 
 class LaunchProvider extends ServiceProvider
 {
@@ -16,6 +17,7 @@ class LaunchProvider extends ServiceProvider
         // Register middleware alias
         $router = $this->app['router'];
         $router->aliasMiddleware('cache.control', SetCacheControlHeaders::class);
+        $router->aliasMiddleware('throttle', ThrottleRequests::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([
