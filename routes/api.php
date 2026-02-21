@@ -15,7 +15,12 @@ try {
                 if (isset($configuration['x-cache-control'])) {
                     $request = $request->middleware('cache.control:' . $configuration['x-cache-control']);
                 }
-                
+
+                // Apply throttle middleware if x-throttle is defined for this endpoint
+                if (isset($configuration['x-throttle'])) {
+                    $request = $request->middleware('throttle:' . $configuration['x-throttle']);
+                }
+
                 if (isset($configuration['auth'])) {
                     //TODO alert if using /{} because it will intercept a lot of requests
                     $request = $request->middleware($configuration['auth']);
