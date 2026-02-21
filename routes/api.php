@@ -29,6 +29,5 @@ try {
         });
     }
 } catch (\Exception $e) {
-    die($e->getMessage());
     throw new \RuntimeException("Invalid OpenAPI configuration");
 }
