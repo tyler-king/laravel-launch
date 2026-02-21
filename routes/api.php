@@ -22,7 +22,6 @@ try {
                 }
 
                 if (isset($configuration['auth'])) {
-                    //TODO alert if using /{} because it will intercept a lot of requests
                     $request = $request->middleware($configuration['auth']);
                 }
             }
